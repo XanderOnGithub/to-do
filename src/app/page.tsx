@@ -3,6 +3,7 @@
 import React from 'react'; // Ensure React is imported
 import TodoList from "./components/todolist";
 import AddButton from "./components/addbutton";
+import ClearButton from './components/clearbutton';
 import { motion } from "framer-motion";
 
 /**
@@ -34,7 +35,10 @@ export default function Home() {
           
           >Created by Xander</motion.h2>
 
+          <div className='flex flex-row gap-3'>
           <AddButton />
+          <ClearButton />
+          </div>
         </section>
 
         <section className="bg-zinc-300 rounded-md p-5 h-full overflow-y-auto"> {/* Make the section fill the container height and scrollable */}

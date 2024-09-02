@@ -29,7 +29,6 @@ export default function Todo({ task, onToggleTask }: { task: Task, onToggleTask:
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
         >
-            {/* Task Checkbox */}
             <motion.button
                 onClick={() => onToggleTask(task)}
                 className={`w-10 h-10 rounded-md me-5 ${task.completed ? 'bg-accept' : 'bg-decline'}`}
@@ -42,8 +41,6 @@ export default function Todo({ task, onToggleTask }: { task: Task, onToggleTask:
                     <FaXmark className="mx-auto text-white text-2xl" />
                 )}
             </motion.button>
-
-            {/* Task Information Container */}
             <div className="flex flex-col flex-grow pe-2">
                 {isEditing ? (
                     <input
@@ -53,13 +50,11 @@ export default function Todo({ task, onToggleTask }: { task: Task, onToggleTask:
                         className={"text-lg border-b-2 border-primary"}
                     />
                 ) : (
-                    <h1 className={`text-lg ${task.completed ? 'line-through' : ''}`}>{task.title}</h1>                )}
+                    <h1 className={`text-lg ${task.completed ? 'line-through' : ''}`}>{task.title}</h1>
+                )}
                 <p className="text-zinc-500 text-sm" suppressHydrationWarning>{task.createdAt.toLocaleString()} </p>
             </div>
-
-            {/* Task Buttons */}
             <div className="flex flex-row gap-3">
-                {/* Edit Button */}
                 <motion.button
                     onClick={handleEditClick}
                     className={`w-10 h-10 rounded-md ${isEditing ? 'bg-accept' : 'bg-zinc-300'}`}
@@ -72,7 +67,6 @@ export default function Todo({ task, onToggleTask }: { task: Task, onToggleTask:
                         <FaPenToSquare className="mx-auto text-gray-700 text-xl" />
                     )}
                 </motion.button>
-                {/* Trash Button */}
                 <motion.button
                     onClick={() => removeTask(task)}
                     className="w-10 h-10 rounded-md bg-zinc-300"

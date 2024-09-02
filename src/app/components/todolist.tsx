@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Task, toggleTask, tasks as initialTasks, taskUpdateEmitter } from "../_lib/todo";
 import Todo from "./todo";
 import { AnimatePresence, motion } from "framer-motion";
+import NoSsr from './nossr';
+
 
 /**
  * TodoList component representing the list of tasks.
@@ -34,7 +36,8 @@ export default function TodoList() {
     }
 
     return (
-        <motion.div
+        <NoSsr> 
+                    <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -45,5 +48,6 @@ export default function TodoList() {
                 ))}
             </AnimatePresence>
         </motion.div>
+        </NoSsr>
     );
 }

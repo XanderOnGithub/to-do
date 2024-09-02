@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 /**
  * Represents a task with an ID, title, completion status, and creation date.
  */
@@ -9,9 +11,9 @@ export interface Task {
 }
 
 /**
- * Array of tasks.
+ * Array of tasks, initialized from cookies if available.
  */
-export let tasks: Task[] = [];
+export let tasks: Task[] = loadTasksFromCookies();
 
 /**
  * Adds a new task to the tasks array.
@@ -26,6 +28,7 @@ export function addTask() {
         createdAt: new Date()
     };
     tasks.push(newTask);
+    saveTasksToCookies();
     taskUpdateEmitter.emit();
 }
 
@@ -39,6 +42,7 @@ export function removeTask(task: Task) {
     const index = tasks.findIndex(t => t.id === task.id);
     if (index !== -1) {
         tasks.splice(index, 1);
+        saveTasksToCookies();
         taskUpdateEmitter.emit();
     }
 }
@@ -53,8 +57,21 @@ export function removeTask(task: Task) {
 export function editTask(task: Task, newTitle: string) {
     if (newTitle.length === 0) {
         removeTask(task);
+    } else {
+        task.title = newTitle;
+        saveTasksToCookies();
+        taskUpdateEmitter.emit();
     }
-    task.title = newTitle;
+}
+
+/**
+ * Clears all tasks from the tasks array.
+ * Emits an update event after clearing the tasks.
+ */
+export function clearTasks() {
+    tasks = [];
+    saveTasksToCookies();
+    taskUpdateEmitter.emit();
 }
 
 /**
@@ -65,6 +82,7 @@ export function editTask(task: Task, newTitle: string) {
  */
 export function toggleTask(task: Task) {
     task.completed = !task.completed;
+    saveTasksToCookies();
     taskUpdateEmitter.emit();
 }
 
@@ -76,6 +94,7 @@ export function toggleTask(task: Task) {
  */
 export function updateTasks(newTasks: Task[]) {
     tasks = newTasks;
+    saveTasksToCookies();
     taskUpdateEmitter.emit();
 }
 
@@ -112,3 +131,26 @@ class EventEmitter {
  * An instance of EventEmitter to handle task update events.
  */
 export const taskUpdateEmitter = new EventEmitter();
+
+/**
+ * Saves the current tasks array to cookies.
+ */
+function saveTasksToCookies() {
+    Cookies.set('tasks', JSON.stringify(tasks), { expires: 7 });
+}
+
+/**
+ * Loads the tasks array from cookies.
+ * 
+ * @returns The tasks array loaded from cookies, or an empty array if no tasks are found.
+ */
+function loadTasksFromCookies(): Task[] {
+    const tasksCookie = Cookies.get('tasks');
+    if (tasksCookie) {
+        return JSON.parse(tasksCookie).map((task: any) => ({
+            ...task,
+            createdAt: new Date(task.createdAt)
+        }));
+    }
+    return [];
+}
